@@ -34,11 +34,11 @@ import USERLIST from '../_mock/user';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'company', label: 'Company', alignRight: false },
-  { id: 'role', label: 'Role', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
+  { id: 'name', label: 'نام', alignRight: true },
+  { id: 'company', label: 'شرکت', alignRight: true },
+  { id: 'role', label: 'نقش', alignRight: true },
+  { id: 'isVerified', label: 'تایید شده', alignRight: true },
+  { id: 'status', label: 'وضعیت', alignRight: true },
   { id: '' },
 ];
 
@@ -152,13 +152,14 @@ export default function UserPage() {
         <title> User | Minimal UI </title>
       </Helmet>
 
-      <Container>
+      <Container sx={{ direction: "rtl" }}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            User
+            کاربران
           </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New User
+          <Button variant="contained">
+            <span>کاربر جدید</span>
+            <Iconify icon="eva:plus-fill" sx={{ mr: "8px" }} />
           </Button>
         </Stack>
 
@@ -189,21 +190,21 @@ export default function UserPage() {
                         </TableCell>
 
                         <TableCell component="th" scope="row" padding="none">
-                          <Stack direction="row" alignItems="center" spacing={2}>
+                          <Stack direction="row" alignItems="center">
                             <Avatar alt={name} src={avatarUrl} />
-                            <Typography variant="subtitle2" noWrap>
+                            <Typography variant="subtitle2" noWrap sx={{ mr: 2 }}>
                               {name}
                             </Typography>
                           </Stack>
                         </TableCell>
 
-                        <TableCell align="left">{company}</TableCell>
+                        <TableCell align="right">{company}</TableCell>
 
-                        <TableCell align="left">{role}</TableCell>
+                        <TableCell align="right">{role}</TableCell>
 
-                        <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
+                        <TableCell align="right">{isVerified ? 'Yes' : 'No'}</TableCell>
 
-                        <TableCell align="left">
+                        <TableCell align="right">
                           <Label color={(status === 'banned' && 'error') || 'success'}>{sentenceCase(status)}</Label>
                         </TableCell>
 
@@ -257,6 +258,8 @@ export default function UserPage() {
             page={page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
+            labelRowsPerPage='ردیف در هر صفحه :'
+            labelDisplayedRows={({ from, to, count }) => `${from}–${to} از ${count !== -1 ? count : `بیشتر از ${to}`}`}
           />
         </Card>
       </Container>
@@ -265,8 +268,8 @@ export default function UserPage() {
         open={Boolean(open)}
         anchorEl={open}
         onClose={handleCloseMenu}
-        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
         PaperProps={{
           sx: {
             p: 1,
@@ -280,13 +283,13 @@ export default function UserPage() {
         }}
       >
         <MenuItem>
-          <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-          Edit
+          <Iconify icon={'eva:edit-fill'} sx={{ ml: 2 }} />
+          ویرایش
         </MenuItem>
 
         <MenuItem sx={{ color: 'error.main' }}>
-          <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
-          Delete
+          <Iconify icon={'eva:trash-2-outline'} sx={{ ml: 2 }} />
+          حذف
         </MenuItem>
       </Popover>
     </>

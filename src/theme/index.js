@@ -20,6 +20,7 @@ ThemeProvider.propTypes = {
 export default function ThemeProvider({ children }) {
   const themeOptions = useMemo(
     () => ({
+      direction: 'rtl',
       palette,
       shape: { borderRadius: 6 },
       typography,

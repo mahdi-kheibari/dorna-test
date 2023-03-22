@@ -9,15 +9,15 @@ import account from '../../../_mock/account';
 
 const MENU_OPTIONS = [
   {
-    label: 'Home',
+    label: 'خانه',
     icon: 'eva:home-fill',
   },
   {
-    label: 'Profile',
+    label: 'پروفایل',
     icon: 'eva:person-fill',
   },
   {
-    label: 'Settings',
+    label: 'تنظیمات',
     icon: 'eva:settings-2-fill',
   },
 ];
@@ -61,8 +61,8 @@ export default function AccountPopover() {
         open={Boolean(open)}
         anchorEl={open}
         onClose={handleClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
         PaperProps={{
           sx: {
             p: 0,
@@ -98,7 +98,7 @@ export default function AccountPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <MenuItem onClick={handleClose} sx={{ m: 1 }}>
-          Logout
+          خروج
         </MenuItem>
       </Popover>
     </>

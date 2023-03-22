@@ -62,8 +62,8 @@ export default function Nav({ openNav, onCloseNav }) {
           <StyledAccount>
             <Avatar src={account.photoURL} alt="photoURL" />
 
-            <Box sx={{ ml: 2 }}>
-              <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
+            <Box sx={{ mr: 2 }}>
+              <Typography variant="subtitle1" sx={{ color: 'text.primary' }}>
                 {account.displayName}
               </Typography>
 
@@ -91,13 +91,14 @@ export default function Nav({ openNav, onCloseNav }) {
     >
       {isDesktop ? (
         <Drawer
+          dir='rtl'
           open
           variant="permanent"
+          anchor='right'
           PaperProps={{
             sx: {
               width: NAV_WIDTH,
               bgcolor: 'background.default',
-              borderRightStyle: 'dashed',
             },
           }}
         >
@@ -105,8 +106,10 @@ export default function Nav({ openNav, onCloseNav }) {
         </Drawer>
       ) : (
         <Drawer
+          dir='rtl'
           open={openNav}
           onClose={onCloseNav}
+          anchor='right'
           ModalProps={{
             keepMounted: true,
           }}

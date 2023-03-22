@@ -45,18 +45,18 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName 
         ...(numSelected > 0 && {
           color: 'primary.main',
           bgcolor: 'primary.lighter',
-        }),
+        })
       }}
     >
       {numSelected > 0 ? (
         <Typography component="div" variant="subtitle1">
-          {numSelected} selected
+          {numSelected} انتخاب شده
         </Typography>
       ) : (
         <StyledSearch
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search user..."
+          placeholder="جستجوی کاربر"
           startAdornment={
             <InputAdornment position="start">
               <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled', width: 20, height: 20 }} />

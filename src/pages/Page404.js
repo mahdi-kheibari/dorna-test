@@ -28,12 +28,11 @@ export default function Page404() {
       <Container>
         <StyledContent sx={{ textAlign: 'center', alignItems: 'center' }}>
           <Typography variant="h3" paragraph>
-            Sorry, page not found!
+          متاسفانه صفحه‌ای که دنبال آن بودید پیدا نشد!
           </Typography>
 
           <Typography sx={{ color: 'text.secondary' }}>
-            Sorry, we couldn’t find the page you’re looking for. Perhaps you’ve mistyped the URL? Be sure to check your
-            spelling.
+          متأسفیم، ما نتوانستیم صفحه مورد نظر شما را پیدا کنیم. شاید شما URL را اشتباه تایپ کرده اید؟ از املایتان مطمئن شوید.
           </Typography>
 
           <Box
@@ -43,7 +42,7 @@ export default function Page404() {
           />
 
           <Button to="/" size="large" variant="contained" component={RouterLink}>
-            Go to Home
+            صفحه اصلی
           </Button>
         </StyledContent>
       </Container>

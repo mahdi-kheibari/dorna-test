@@ -16,12 +16,14 @@ export default function GlobalStyles() {
           width: '100%',
           height: '100%',
           WebkitOverflowScrolling: 'touch',
+          direction: "rtl"
         },
         body: {
           margin: 0,
           padding: 0,
           width: '100%',
           height: '100%',
+          direction: "rtl"
         },
         '#root': {
           width: '100%',

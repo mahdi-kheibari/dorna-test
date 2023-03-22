@@ -4,6 +4,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import Router from './routes';
 // theme
 import ThemeProvider from './theme';
+import RTLProvider from './theme/RTLProvider';
 // components
 import ScrollToTop from './components/scroll-to-top';
 
@@ -13,10 +14,12 @@ export default function App() {
   return (
     <HelmetProvider>
       <BrowserRouter>
-        <ThemeProvider>
-          <ScrollToTop />
-          <Router />
-        </ThemeProvider>
+        <RTLProvider>
+          <ThemeProvider>
+            <ScrollToTop />
+            <Router />
+          </ThemeProvider>
+        </RTLProvider>
       </BrowserRouter>
     </HelmetProvider>
   );
