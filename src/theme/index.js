@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 // @mui
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider as MUIThemeProvider, createTheme, StyledEngineProvider } from '@mui/material/styles';
+import { faIR } from '@mui/x-date-pickers';
 //
 import palette from './palette';
 import shadows from './shadows';
@@ -30,7 +31,7 @@ export default function ThemeProvider({ children }) {
     []
   );
 
-  const theme = createTheme(themeOptions);
+  const theme = createTheme(themeOptions, faIR);
   theme.components = componentsOverride(theme);
 
   return (

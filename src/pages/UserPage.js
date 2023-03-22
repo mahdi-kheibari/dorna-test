@@ -1,5 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
+import { faker } from '@faker-js/faker/locale/fa'
 import { useContext, useState } from 'react';
 // @mui
 import {
@@ -20,10 +21,15 @@ import {
   IconButton,
   TableContainer,
   TablePagination,
+  TextField,
 } from '@mui/material';
+import { MobileDatePicker } from '@mui/x-date-pickers';
+import { DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { faDate } from '../utils/formatTime';
 // components
 import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
+import Modal from '../components/modal/Modal';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 // context
@@ -32,12 +38,6 @@ import { store } from '../store/Context';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  // { id: 'name', label: 'نام', alignRight: true },
-  // { id: 'company', label: 'شرکت', alignRight: true },
-  // { id: 'role', label: 'نقش', alignRight: true },
-  // { id: 'isVerified', label: 'تایید شده', alignRight: true },
-  // { id: 'status', label: 'وضعیت', alignRight: true },
-
   { id: 'firstName', label: 'نام', alignRight: true },
   { id: 'lastName', label: 'نام خانوادگی', alignRight: true },
   { id: 'fatherName', label: 'نام پدر', alignRight: true },
@@ -71,7 +71,7 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user) => _user.firstName.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   return stabilizedThis.map((el) => el[0]);
 }
@@ -93,6 +93,14 @@ export default function UserPage() {
   const [filterName, setFilterName] = useState('');
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const [openNewUserModal, setOpenNewUserModal] = useState(false);
+  const [newUser, setNewUser] = useState({
+    firstName: { value: "", errorText: "لطفا نام خودتان را وارد کنید", error: false },
+    lastName: { value: "", errorText: "لطفا نام خانوادگی را وارد کنید", error: false },
+    fatherName: { value: "", errorText: "لطفا نام پدرتان را وارد کنید", error: false },
+    birthday: new Date()
+  });
 
   const handleOpenMenu = (event, id) => {
     setOpen({ anchorEl: event.currentTarget, id });
@@ -150,6 +158,53 @@ export default function UserPage() {
     setUsers(users.filter((item) => item.id !== id))
     handleCloseMenu()
   }
+
+  const handleCloseUserModal = () => {
+    const newUserObject = {}
+    Object.keys(newUser).forEach((label) => {
+      if (label !== "birthday") {
+        newUserObject[label] = { ...newUser[label], value: "", error: false }
+      } else {
+        newUserObject.birthday = new Date()
+      }
+    })
+    setNewUser(newUserObject)
+    setOpenNewUserModal(false)
+  }
+
+  const handleAddUser = () => {
+    let error = false
+    Object.keys(newUser).forEach((label) => {
+      if (label !== "birthday" && !newUser[label].value) {
+        setNewUser({ ...newUser, [label]: { ...newUser[label], error: true } })
+        error = true
+      }
+    })
+    if (error) {
+      return;
+    }
+    setUsers([...users, {
+      id: faker.datatype.uuid(),
+      avatarUrl: `/assets/images/avatars/avatar_${Math.floor(Math.random() * 24)}.jpg`,
+      firstName: newUser.firstName.value,
+      lastName: newUser.lastName.value,
+      fatherName: newUser.fatherName.value,
+      birthday: { data: newUser.birthday, faDate: faDate(newUser.birthday) }
+    }])
+    handleCloseUserModal()
+  }
+
+  const handleChangeUserInput = (e, label) => {
+    const user = { ...newUser, [label]: { ...newUser[label], value: e.target.value } }
+    if (user[label].value) {
+      user[label].error = false
+      setNewUser(user)
+    } else {
+      user[label].error = true
+      setNewUser(user)
+    }
+  }
+
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
 
   const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
@@ -167,7 +222,7 @@ export default function UserPage() {
           <Typography variant="h4" gutterBottom>
             کاربران
           </Typography>
-          <Button variant="contained">
+          <Button variant="contained" onClick={() => setOpenNewUserModal(true)}>
             <span>کاربر جدید</span>
             <Iconify icon="eva:plus-fill" sx={{ mr: "8px" }} />
           </Button>
@@ -298,6 +353,37 @@ export default function UserPage() {
           حذف
         </MenuItem>
       </Popover>
+
+      <Modal open={openNewUserModal} handleClose={() => handleCloseUserModal()} handleAction={() => handleAddUser()} title="افزودن کاربر">
+        <TextField
+          value={newUser.firstName.value}
+          onChange={(e) => handleChangeUserInput(e, "firstName")}
+          placeholder="نام"
+          error={newUser.firstName.error}
+          helperText={newUser.firstName.error && newUser.firstName.errorText}
+        />
+        <TextField
+          value={newUser.lastName.value}
+          onChange={(e) => handleChangeUserInput(e, "lastName")}
+          placeholder="نام خانوادگی"
+          error={newUser.lastName.error}
+          helperText={newUser.lastName.error && newUser.lastName.errorText}
+        />
+        <TextField
+          value={newUser.fatherName.value}
+          onChange={(e) => handleChangeUserInput(e, "fatherName")}
+          placeholder="نام پدر"
+          error={newUser.fatherName.error}
+          helperText={newUser.fatherName.error && newUser.fatherName.errorText}
+        />
+        <DemoItem label="تاریخ تولد">
+          <MobileDatePicker
+            value={newUser.birthday}
+            onChange={(newValue) => setNewUser({ ...newUser, birthday: newValue })}
+            disableFuture
+          />
+        </DemoItem>
+      </Modal>
     </>
   );
 }
