@@ -2,6 +2,11 @@ import { format, getTime, formatDistanceToNow } from 'date-fns';
 
 // ----------------------------------------------------------------------
 
+export function faDate(date) {
+  const newDate = new Intl.DateTimeFormat('fa-IR', { "day": "2-digit", "month": "numeric", "year": "numeric" }).format(date);
+  return date ? newDate : '';
+}
+
 export function fDate(date, newFormat) {
   const fm = newFormat || 'dd MMM yyyy';
 
@@ -21,7 +26,7 @@ export function fTimestamp(date) {
 export function fToNow(date) {
   return date
     ? formatDistanceToNow(new Date(date), {
-        addSuffix: true,
-      })
+      addSuffix: true,
+    })
     : '';
 }

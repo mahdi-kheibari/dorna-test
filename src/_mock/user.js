@@ -1,27 +1,18 @@
 import { faker } from '@faker-js/faker/locale/fa'
-import { sample } from 'lodash';
+import { faDate } from '../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
-const users = [...Array(24)].map((_, index) => ({
-  id: faker.datatype.uuid(),
-  avatarUrl: `/assets/images/avatars/avatar_${index + 1}.jpg`,
-  name: faker.name.fullName(),
-  company: faker.company.name(),
-  isVerified: faker.datatype.boolean(),
-  status: sample(['active', 'banned']),
-  role: sample([
-    'Leader',
-    'Hr Manager',
-    'UI Designer',
-    'UX Designer',
-    'UI/UX Designer',
-    'Project Manager',
-    'Backend Developer',
-    'Full Stack Designer',
-    'Front End Developer',
-    'Full Stack Developer',
-  ]),
-}));
+const users = [...Array(24)].map((_, index) => {
+  const birthday = faker.date.birthdate({ min: 18, max: 65, mode: 'age' })
+  return {
+    id: faker.datatype.uuid(),
+    avatarUrl: `/assets/images/avatars/avatar_${index + 1}.jpg`,
+    firstName: faker.name.firstName(),
+    lastName: faker.name.lastName(),
+    fatherName: faker.name.firstName({ sex: 'male' }),
+    birthday: { data: birthday, faDate: faDate(birthday) }
+  }
+});
 
 export default users;

@@ -1,6 +1,5 @@
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
-import { sentenceCase } from 'change-case';
 import { useContext, useState } from 'react';
 // @mui
 import {
@@ -23,7 +22,6 @@ import {
   TablePagination,
 } from '@mui/material';
 // components
-import Label from '../components/label';
 import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
 // sections
@@ -34,11 +32,16 @@ import { store } from '../store/Context';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'نام', alignRight: true },
-  { id: 'company', label: 'شرکت', alignRight: true },
-  { id: 'role', label: 'نقش', alignRight: true },
-  { id: 'isVerified', label: 'تایید شده', alignRight: true },
-  { id: 'status', label: 'وضعیت', alignRight: true },
+  // { id: 'name', label: 'نام', alignRight: true },
+  // { id: 'company', label: 'شرکت', alignRight: true },
+  // { id: 'role', label: 'نقش', alignRight: true },
+  // { id: 'isVerified', label: 'تایید شده', alignRight: true },
+  // { id: 'status', label: 'وضعیت', alignRight: true },
+
+  { id: 'firstName', label: 'نام', alignRight: true },
+  { id: 'lastName', label: 'نام خانوادگی', alignRight: true },
+  { id: 'fatherName', label: 'نام پدر', alignRight: true },
+  { id: 'birthday', label: 'تاریخ تولد', alignRight: true },
   { id: '' },
 ];
 
@@ -187,33 +190,29 @@ export default function UserPage() {
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, role, status, company, avatarUrl, isVerified } = row;
-                    const selectedUser = selected.indexOf(name) !== -1;
+                    const { id, firstName, lastName, fatherName, birthday, avatarUrl } = row;
+                    const selectedUser = selected.indexOf(firstName) !== -1;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
                         <TableCell padding="checkbox">
-                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, name)} />
+                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, firstName)} />
                         </TableCell>
 
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center">
-                            <Avatar alt={name} src={avatarUrl} />
+                            <Avatar alt={firstName} src={avatarUrl} />
                             <Typography variant="subtitle2" noWrap sx={{ mr: 2 }}>
-                              {name}
+                              {firstName}
                             </Typography>
                           </Stack>
                         </TableCell>
 
-                        <TableCell align="right">{company}</TableCell>
+                        <TableCell align="right">{lastName}</TableCell>
 
-                        <TableCell align="right">{role}</TableCell>
+                        <TableCell align="right">{fatherName}</TableCell>
 
-                        <TableCell align="right">{isVerified ? 'Yes' : 'No'}</TableCell>
-
-                        <TableCell align="right">
-                          <Label color={(status === 'banned' && 'error') || 'success'}>{sentenceCase(status)}</Label>
-                        </TableCell>
+                        <TableCell align="right">{birthday.faDate}</TableCell>
 
                         <TableCell align="right">
                           <IconButton size="large" color="inherit" onClick={(e) => handleOpenMenu(e, id)}>
