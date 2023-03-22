@@ -91,8 +91,8 @@ export default function UserPage() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const handleOpenMenu = (event) => {
-    setOpen(event.currentTarget);
+  const handleOpenMenu = (event, id) => {
+    setOpen({ anchorEl: event.currentTarget, id });
   };
 
   const handleCloseMenu = () => {
@@ -143,6 +143,10 @@ export default function UserPage() {
     setFilterName(event.target.value);
   };
 
+  const handleDeleteUser = (id) => {
+    setUsers(users.filter((item) => item.id !== id))
+    handleCloseMenu()
+  }
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
 
   const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
@@ -212,7 +216,7 @@ export default function UserPage() {
                         </TableCell>
 
                         <TableCell align="right">
-                          <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
+                          <IconButton size="large" color="inherit" onClick={(e) => handleOpenMenu(e, id)}>
                             <Iconify icon={'eva:more-vertical-fill'} />
                           </IconButton>
                         </TableCell>
@@ -269,7 +273,7 @@ export default function UserPage() {
 
       <Popover
         open={Boolean(open)}
-        anchorEl={open}
+        anchorEl={open?.anchorEl}
         onClose={handleCloseMenu}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'left' }}
@@ -290,7 +294,7 @@ export default function UserPage() {
           ویرایش
         </MenuItem>
 
-        <MenuItem sx={{ color: 'error.main' }}>
+        <MenuItem sx={{ color: 'error.main' }} onClick={() => handleDeleteUser(open.id)}>
           <Iconify icon={'eva:trash-2-outline'} sx={{ ml: 2 }} />
           حذف
         </MenuItem>
