@@ -109,12 +109,16 @@ export default function Nav({ openNav, onCloseNav }) {
           dir='rtl'
           open={openNav}
           onClose={onCloseNav}
-          anchor='right'
+          anchor='left'
           ModalProps={{
             keepMounted: true,
           }}
           PaperProps={{
-            sx: { width: NAV_WIDTH },
+            sx: {
+              width: NAV_WIDTH,
+              left: 'unset',
+              right: 'unset'
+            },
           }}
         >
           {renderContent}
