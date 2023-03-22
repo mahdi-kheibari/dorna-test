@@ -11,7 +11,7 @@ const users = [...Array(24)].map((_, index) => {
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
     fatherName: faker.name.firstName({ sex: 'male' }),
-    birthday: { data: birthday, faDate: faDate(birthday) }
+    birthday: { date: birthday, faDate: faDate(birthday) }
   }
 });
 

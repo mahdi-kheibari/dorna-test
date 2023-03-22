@@ -20,18 +20,14 @@ import {
   Typography,
   IconButton,
   TableContainer,
-  TablePagination,
-  TextField,
+  TablePagination
 } from '@mui/material';
-import { MobileDatePicker } from '@mui/x-date-pickers';
-import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { faDate } from '../utils/formatTime';
 // components
 import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
-import Modal from '../components/modal/Modal';
 // sections
-import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
+import { UserListHead, UserListToolbar, UserModal } from '../sections/@dashboard/user';
 // context
 import { store } from '../store/Context';
 
@@ -95,6 +91,7 @@ export default function UserPage() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [openNewUserModal, setOpenNewUserModal] = useState(false);
+  const [openEditUserModal, setOpenEditUserModal] = useState(false);
   const [newUser, setNewUser] = useState({
     firstName: { value: "", errorText: "لطفا نام خودتان را وارد کنید", error: false },
     lastName: { value: "", errorText: "لطفا نام خانوادگی را وارد کنید", error: false },
@@ -170,6 +167,7 @@ export default function UserPage() {
     })
     setNewUser(newUserObject)
     setOpenNewUserModal(false)
+    setOpenEditUserModal(false)
   }
 
   const handleAddUser = () => {
@@ -203,6 +201,50 @@ export default function UserPage() {
       user[label].error = true
       setNewUser(user)
     }
+  }
+
+  const handleEditUserBtn = (id) => {
+    const user = USERLIST.find((item) => item.id === id)
+    setOpenEditUserModal(true)
+    const editUserObject = {}
+    Object.keys(newUser).forEach((label) => {
+      if (label !== "birthday") {
+        editUserObject[label] = { ...newUser[label], value: user[label] }
+      } else {
+        editUserObject.birthday = user.birthday.date
+      }
+    })
+    setNewUser(editUserObject)
+  }
+
+  const handleEditUser = () => {
+    let error = false
+    Object.keys(newUser).forEach((label) => {
+      if (label !== "birthday" && !newUser[label].value) {
+        setNewUser({ ...newUser, [label]: { ...newUser[label], error: true } })
+        error = true
+      }
+    })
+    if (error) {
+      return;
+    }
+    const prevUser = users.find((item) => item.id === open.id)
+    setUsers(
+      users.map((user) => {
+        if (user.id === open.id) {
+          return {
+            id: prevUser.id,
+            avatarUrl: prevUser.avatarUrl,
+            firstName: newUser.firstName.value,
+            lastName: newUser.lastName.value,
+            fatherName: newUser.fatherName.value,
+            birthday: { data: newUser.birthday, faDate: faDate(newUser.birthday) }
+          }
+        }
+        return user
+      }))
+    handleCloseUserModal()
+    handleCloseMenu()
   }
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
@@ -343,7 +385,7 @@ export default function UserPage() {
           },
         }}
       >
-        <MenuItem>
+        <MenuItem onClick={() => handleEditUserBtn(open.id)}>
           <Iconify icon={'eva:edit-fill'} sx={{ ml: 2 }} />
           ویرایش
         </MenuItem>
@@ -354,36 +396,9 @@ export default function UserPage() {
         </MenuItem>
       </Popover>
 
-      <Modal open={openNewUserModal} handleClose={() => handleCloseUserModal()} handleAction={() => handleAddUser()} title="افزودن کاربر">
-        <TextField
-          value={newUser.firstName.value}
-          onChange={(e) => handleChangeUserInput(e, "firstName")}
-          placeholder="نام"
-          error={newUser.firstName.error}
-          helperText={newUser.firstName.error && newUser.firstName.errorText}
-        />
-        <TextField
-          value={newUser.lastName.value}
-          onChange={(e) => handleChangeUserInput(e, "lastName")}
-          placeholder="نام خانوادگی"
-          error={newUser.lastName.error}
-          helperText={newUser.lastName.error && newUser.lastName.errorText}
-        />
-        <TextField
-          value={newUser.fatherName.value}
-          onChange={(e) => handleChangeUserInput(e, "fatherName")}
-          placeholder="نام پدر"
-          error={newUser.fatherName.error}
-          helperText={newUser.fatherName.error && newUser.fatherName.errorText}
-        />
-        <DemoItem label="تاریخ تولد">
-          <MobileDatePicker
-            value={newUser.birthday}
-            onChange={(newValue) => setNewUser({ ...newUser, birthday: newValue })}
-            disableFuture
-          />
-        </DemoItem>
-      </Modal>
+      <UserModal open={openNewUserModal} handleClose={handleCloseUserModal} handleAction={handleAddUser} title="افزودن کاربر" fields={newUser} setFields={setNewUser} handleChangeUserInput={handleChangeUserInput} />
+
+      <UserModal open={openEditUserModal} handleClose={handleCloseUserModal} handleAction={handleEditUser} title="ویرایش کاربر" fields={newUser} setFields={setNewUser} handleChangeUserInput={handleChangeUserInput} />
     </>
   );
 }
